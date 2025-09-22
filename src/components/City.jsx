@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import styles from "./City.module.css";
 
 const formatDate = (date) =>
@@ -9,17 +9,29 @@ const formatDate = (date) =>
     weekday: "long",
   }).format(new Date(date));
 
+const flagemojiToPNG = (flag) => {
+  var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
+    .map((char) => String.fromCharCode(char - 127397).toLowerCase())
+    .join("");
+  return (
+    <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt="flag" />
+  );
+};
+
 function City() {
   // TEMP DATA
   const currentCity = {
     cityName: "Lisbon",
-    emoji: "🇵🇹",
+    emoji: flagemojiToPNG("🇵🇹"),
     date: "2027-10-31T15:59:59.138Z",
     notes: "My favorite city so far!",
   };
 
   const { cityName, emoji, date, notes } = currentCity;
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lat = searchParams.get("lat");
+  const lng = searchParams.get("lng");
 
   return (
     <div className={styles.city}>
